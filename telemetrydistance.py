@@ -22,6 +22,10 @@ def read_receivers(filename="receivers.json"):
 
     output = {}
     for _rxer in _json:
+        if _rxer['lat'] == 0.0 and _rxer['lon'] == 0.0:
+            print(f"Omitting {_rxer['name']} with 0 lat/lon.")
+            continue
+
         output[_rxer['name']] = _rxer
 
     return output
@@ -85,7 +89,7 @@ def main():
     parser = argparse.ArgumentParser(description="Telemetry Distance Records", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("telemetry", help="JSON Telemetry Export")
     parser.add_argument("--receivers", default="receivers.json", help="Receiver JSON file. (Default: receivers.json)")
-    parser.add_argument("--ntop", default=10, help="Print Top N distance records")
+    parser.add_argument("--ntop", default=10, type=int, help="Print Top N distance records")
     parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Verbose output (set logging level to DEBUG)")
     args = parser.parse_args()
 
