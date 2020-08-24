@@ -16,5 +16,5 @@ Download export of payload log from http://habitat.habhub.org/ept/ in JSON forma
 
 Run the script:
 ```console
-$ python telemetrydistance yourtelemetrylog.json
+$ python telemetrydistance.py yourtelemetrylog.json
 ```

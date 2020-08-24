@@ -106,6 +106,8 @@ def main():
 
     _records = calculate_distances(receivers, telem)
 
+    _distances = {}
+
     # Print out individual records for all listeners.
     for _call in _records:
         _distance = _records[_call]['distance']/1000
@@ -114,6 +116,25 @@ def main():
         _bearing = _records[_call]['pos_info']['bearing']
         print(f"{_call}: {_distance:.1f} km (Payload Alt: {_balloon_alt:.1f} m, Elevation:{_elevation:.1f}˚, Bearing: {_bearing:.1f}˚)")
 
+        _distances[_distance] = {'call': _call, 'data':_records[_call]}
+
+    # Top N distances.
+    print("\n\nDistance Records")
+    _distance_keys = list(_distances.keys())
+    _distance_keys.sort()
+
+    _i = 1
+    while _i <= args.ntop:
+        _dist = _distance_keys[-1*_i]
+        
+        _call = _distances[_dist]['call']
+        _balloon_alt = _distances[_dist]['data']['pos_info']['balloon'][2]
+        _elevation = _distances[_dist]['data']['pos_info']['elevation']
+        _bearing = _distances[_dist]['data']['pos_info']['bearing']
+
+        print(f"#{_i}: {_dist:.1f} km by {_call} (Payload Alt: {_balloon_alt:.1f} m, Elevation:{_elevation:.1f}˚, Bearing: {_bearing:.1f}˚)")
+
+        _i += 1
 
 
 
