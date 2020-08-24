@@ -52,6 +52,9 @@ def calculate_distances(rxers, telem):
         _lon = _line['longitude']
         _alt = _line['altitude']
 
+        if _lat == 0.0 and _lon == 0.0:
+            continue
+
         # List of receivers
         _rx_list = _line['_receivers']
 
@@ -71,11 +74,12 @@ def calculate_distances(rxers, telem):
 
             if _rx not in _rx_records:
                 # Initialise entry.
-                _rx_records[_rx] = {'distance': 0, 'pos_info': {}, 'rx_info': rxers[_rx]}
+                _rx_records[_rx] = {'distance': 0, 'pos_info': {}, 'rx_info': rxers[_rx], 'raw': ""}
             
             if _distance > _rx_records[_rx]['distance']:
                 _rx_records[_rx]['distance'] = _distance
                 _rx_records[_rx]['pos_info'] = _pos_info
+                _rx_records[_rx]['raw'] = _line['_sentence']
         
 
     return _rx_records
@@ -118,7 +122,7 @@ def main():
         _balloon_alt = _records[_call]['pos_info']['balloon'][2]
         _elevation = _records[_call]['pos_info']['elevation']
         _bearing = _records[_call]['pos_info']['bearing']
-        print(f"{_call}: {_distance:.1f} km (Payload Alt: {_balloon_alt:.1f} m, Elevation:{_elevation:.1f}˚, Bearing: {_bearing:.1f}˚)")
+        print(f"{_call}: {_distance:.1f} km (Payload Alt: {_balloon_alt:.1f} m, Elevation:{_elevation:.1f}˚, Bearing: {_bearing:.1f}˚) Raw: {_records[_call]['raw'].strip()}")
 
         _distances[_distance] = {'call': _call, 'data':_records[_call]}
 
